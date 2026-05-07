@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+
+  stages {
+
+    stage('Clone Repo') {
+      steps {
+        git branch: 'main', url: 'https://github.com/akaash37/upgrad-capstone.git'
+      }
+    }
+
+    stage('Deploy to AWS') {
+      steps {
+        sh 'ansible-playbook -i inventory.ini deploy-pages.yml --limit aws-app'
+      }
+    }
+
+    stage('Deploy to Azure') {
+      steps {
+        sh 'ansible-playbook -i inventory.ini deploy-pages.yml --limit azure-vm'
+      }
+    }
+
+  }
+}
